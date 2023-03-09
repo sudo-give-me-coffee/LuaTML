@@ -104,94 +104,42 @@ html {
 Dado a forma como a biblioteca funciona é possível integrar com qualquer Framework CSS, basta criar geradores para os componentes, segue abaixo um modelo que você pode usar, substitua "custom_tag" pela sua tag e faça as modificações nos locais indicados:
 
 ```lua
-custom_tag = setmetatable({tag="custom_tag",properties={}},{
-  __mul  = getmetatable(template).__mul,
-  __call = getmetatable(template).__call,
-  __pow  = getmetatable(template).__pow,
-  __tostring =
-    function (self)
-      local html = "<"..self.tag
-      -- Trate as propriedades obrigatórias aqui
-      
-      for property, value in pairs(self.properties or {}) do
-        if type(property) ~= "number" then
-          html = html.." "..property.."=\""..value.."\" "
-        end
-      end
-      
-      -- coloque as propriedades customizadas aqui
-      
-      html = html..">"
-
-      -- Coloque as suas tags customizadas que devem ficar antes
-      -- das tags filhas aqui
-
-      -- Processa as tags filhas
-      for i, children in ipairs(self.properties or {}) do
-        html = html..tostring(children)
-      end
-
-      -- Coloque as suas tags customizadas que devem ficar depois
-      -- das tgas filhas aqui
-
-      return html.."</"..self.tag..">"
-    end
-  ,
-})
+Custom = html_component "custom_tag" {
+  tag_name = "section",
+  properties = {
+    -- Propriedades e seus valores, esses valores são adicionados
+    -- ao final do componente
+  },
+  pre_childrens_data = {
+    -- Elementos e/ou textos para serem adicionados antes dos componentes
+  },
+  post_childrens_data = {
+    -- Elementos e/ou textos para serem adicionados após dos componentes
+  }
+}
 ```
 
-Por exemplo o section do CTA dessa demonstração oficial do Bootstrap pode ser escrita assim:
+Por exemplo o section do CTA [dessa demonstração oficial do Bootstrap](https://getbootstrap.com/docs/5.3/examples/album/) pode ser escrita assim:
 
 ```lua
-HeaderSection = setmetatable({tag="section",properties={}},{
-  __mul  = getmetatable(template).__mul,
-  __call = getmetatable(template).__call,
-  __pow  = getmetatable(template).__pow,
-  __tostring =
-    function (self)
-      local html = "<"..self.tag
-      -- Trate as propriedades obrigatórias aqui
-      self.properties.class = self.properties.class and self.properties.class.." py-5 text-center container\"" or " py-5 text-center container\""
-
-      for property, value in pairs(self.properties or {}) do
-        if type(property) ~= "number" then
-          html = html.." "..property.."=\""..value.."\""
-        end
-      end
-
-      -- coloque as propriedades customizadas aqui
-
-      html = html..">"
-
-      -- Coloque as suas tags customizadas que devem ficar antes
-      -- das tags filhas aqui
-
-      html = html..'<div class="row py-lg-5">'
-      html = html..'<div class="col-lg-6 col-md-8 mx-auto">'
-
-      -- Processa as tags filhas
-      for i, children in ipairs(self.properties or {}) do
-        html = html..tostring(children)
-      end
-
-      html = html..'</div>'
-      html = html..'</div>'
-
-
-      -- Coloque as suas tags customizadas que devem ficar depois
-      -- das tgas filhas aqui
-
-      return html.."</"..self.tag..">"
-    end
-  ,
-})
-
+HeaderSection = html_component "section" {
+  tag_name = "section",
+  properties = {
+    class = "py-5 text-center container"
+  },
+  pre_childrens_data = {
+    '<div class="row py-lg-5">','<div class="col-lg-6 col-md-8 mx-auto">'
+  },
+  post_childrens_data = {
+    '</div>','</div>'
+  }
+}
 ```
 
 O uso fica idêntico as tags HTML normais
 
 ## Coisas pra fazer:
 
-- [ ] Facilitar a criação de componentes customizados
+- [x] Facilitar a criação de componentes customizados
 - [ ] Pacote LuaRocks
 
