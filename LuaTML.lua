@@ -73,6 +73,11 @@ setmetatable(_ENV,{
         __call =
           function (self,properties)
             self.properties = type(properties) == "table" and properties or {tostring(properties)}
+            
+            if self.tag:lower() == "html" then
+              return tostring(self)
+            end
+
             return self
           end
       })
