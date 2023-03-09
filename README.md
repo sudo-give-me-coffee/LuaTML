@@ -53,7 +53,7 @@ html {
 ```
 
 
-### Intercalando listas com o conteúdo [Resultado](https://codepen.io/natanael-b/pen/ExebRVj):
+#### Intercalando listas com o conteúdo [Resultado](https://codepen.io/natanael-b/pen/ExebRVj):
 
 ```lua
 local exemplo =
@@ -74,7 +74,7 @@ html {
 }
 ```
 
-### Pegando blocos avulsos [Resultado](https://codepen.io/natanael-b/pen/MWqOXaM)
+#### Pegando blocos avulsos [Resultado](https://codepen.io/natanael-b/pen/MWqOXaM)
 
 ```lua
 
