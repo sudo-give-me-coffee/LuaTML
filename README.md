@@ -105,7 +105,6 @@ Dado a forma como a biblioteca funciona é possível integrar com qualquer Frame
 
 ```lua
 Custom = html_component "custom_tag" {
-  tag_name = "section",
   properties = {
     -- Propriedades e seus valores, esses valores são adicionados
     -- ao final do componente
@@ -123,7 +122,6 @@ Por exemplo o section do CTA [dessa demonstração oficial do Bootstrap](https:/
 
 ```lua
 HeaderSection = html_component "section" {
-  tag_name = "section",
   properties = {
     class = "py-5 text-center container"
   },
