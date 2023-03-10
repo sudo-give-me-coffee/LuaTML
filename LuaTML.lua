@@ -95,39 +95,39 @@ function html_component(tag)
         __call = getmetatable(template).__call,
         __pow  = getmetatable(template).__pow,
         __tostring =
-    function (self)
-      local html = "<"..self.tag
+        function (self)
+          local html = "<"..self.tag
 
-      for property, value in pairs(self.hard_properties) do
-        if self.properties[property] then
-          self.properties[property] = self.properties[property]..tostring(value)
-        else
-          self.properties[property] = tostring(value)
-        end
-      end
+          for property, value in pairs(self.hard_properties) do
+            if self.properties[property] then
+              self.properties[property] = self.properties[property]..tostring(value)
+            else
+              self.properties[property] = tostring(value)
+            end
+          end
   
-      for property, value in pairs(self.properties or {}) do
-        if type(property) ~= "number" then
-          html = html.." "..property.."=\""..value.."\""
+          for property, value in pairs(self.properties or {}) do
+            if type(property) ~= "number" then
+              html = html.." "..property.."=\""..value.."\""
+            end
+          end
+
+          html = html..">"
+
+          for i, value in ipairs(self.pre_childrens_data) do
+            html = html..tostring(value)
+          end
+
+          for i, children in ipairs(self.properties or {}) do
+            html = html..tostring(children)
+          end
+
+          for i, value in ipairs(self.post_childrens_data or {}) do
+            html = html..tostring(value)
+          end
+
+          return html.."</"..self.tag..">"
         end
-      end
-
-      html = html..">"
-
-      for i, value in ipairs(self.pre_childrens_data) do
-        html = html..tostring(value)
-      end
-
-      for i, children in ipairs(self.properties or {}) do
-        html = html..tostring(children)
-      end
-
-      for i, value in ipairs(self.post_childrens_data or {}) do
-        html = html..tostring(value)
-      end
-
-      return html.."</"..self.tag..">"
-    end
       })
     end
 end
