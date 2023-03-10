@@ -58,7 +58,7 @@ setmetatable(_ENV,{
               end
             end
 
-            if #(self.properties or {}) == 0 then
+            if (#(self.properties or {}) == 0) and self.tag:lower() ~= "script" then
               return html.."/>"
             end
 
