@@ -85,11 +85,12 @@ setmetatable(_ENV,{
 })
 
 function html_component(tag)
+  local _tag = tag
   return 
     function (desctriptor)
-      return setmetatable({tag=tag,hard_properties=desctriptor.properties,
-                                   pre_childrens_data=desctriptor.pre_childrens_data,
-                                   post_childrens_data=desctriptor.post_childrens_data},{
+      return setmetatable({tag=_tag,hard_properties=desctriptor.properties or {},
+                                   pre_childrens_data=desctriptor.pre_childrens_data or {},
+                                   post_childrens_data=desctriptor.post_childrens_data or {}},{
         __mul  = getmetatable(template).__mul,
         __call = getmetatable(template).__call,
         __pow  = getmetatable(template).__pow,
