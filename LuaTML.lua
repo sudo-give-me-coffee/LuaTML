@@ -28,6 +28,7 @@ setmetatable(_ENV,{
         __pow =
           function (self,items)
             local block = {}
+            items = type(items) == "table" and items or {items}
             for i, item in ipairs(items) do
               local element = {tag = self.tag,properties = {}}
               for property, value in pairs(self.properties or {}) do
