@@ -110,10 +110,10 @@ Custom = html_component "custom_tag" {
     -- ao final do componente
   },
   pre_childrens_data = {
-    -- Elementos e/ou textos para serem adicionados antes dos componentes
+    -- Elementos e/ou textos para serem adicionados antes dos componentes filhos
   },
   post_childrens_data = {
-    -- Elementos e/ou textos para serem adicionados após dos componentes
+    -- Elementos e/ou textos para serem adicionados após dos componentes filhos
   }
 }
 ```
@@ -135,6 +135,42 @@ HeaderSection = html_component "section" {
 ```
 
 O uso fica idêntico as tags HTML normais
+
+## Limitação de sintaxe
+
+Devido a sintaxe Lua algumas situações podem resultar em erros, isso acontece porque Lua utiliza [[ e ]] para delimitar strings com mais de uma linha, considere que você precisa adicionar o seguinte código Javascript em em LuaTML:
+
+```js
+const indices = [0,1,2,3,4,5];
+const valores = [""zero,"um","dois","três","quatro","cinco"];
+alert(valores[indices[3]]);
+```
+
+Em LuaTML instintivamente:
+
+```lua
+local teste = string [[
+const indices = [0,1,2,3,4,5];
+const valores = ["zero","um","dois","três","quatro","cinco"];
+alert(valores[indices[3]]);
+]]
+
+print(teste)
+```
+
+Porém, isso resultará em um erro, ao invés disso subsitua `]]` por `]].."]]"..[[`:
+
+```lua
+local teste = [[
+const indices = [0,1,2,3,4,5];
+const valores = ["zero","um","dois","três","quatro","cinco"];
+alert(valores[indices[3]].."]]"..[[);
+]]
+
+print(teste)
+```
+
+Caso seja realmente 
 
 ## Coisas pra fazer:
 
