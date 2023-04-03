@@ -142,14 +142,14 @@ Devido a sintaxe Lua algumas situações podem resultar em erros, isso acontece 
 
 ```js
 const indices = [0,1,2,3,4,5];
-const valores = [""zero,"um","dois","três","quatro","cinco"];
+const valores = ["zero","um","dois","três","quatro","cinco"];
 alert(valores[indices[3]]);
 ```
 
 Em LuaTML instintivamente:
 
 ```lua
-local teste = string [[
+local teste = script [[
 const indices = [0,1,2,3,4,5];
 const valores = ["zero","um","dois","três","quatro","cinco"];
 alert(valores[indices[3]]);
@@ -161,7 +161,7 @@ print(teste)
 Porém, isso resultará em um erro, ao invés disso subsitua `]]` por `]].."]]"..[[`:
 
 ```lua
-local teste = [[
+local teste = script [[
 const indices = [0,1,2,3,4,5];
 const valores = ["zero","um","dois","três","quatro","cinco"];
 alert(valores[indices[3]].."]]"..[[);
