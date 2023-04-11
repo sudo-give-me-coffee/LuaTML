@@ -109,7 +109,7 @@ function html_component(tag)
   
           for property, value in pairs(self.properties or {}) do
             if type(property) ~= "number" then
-              html = html.." "..property.."=\""..value.."\""
+              html = html.." "..property.."=\""..value:gsub("\"","&quot;").."\""
             end
           end
 
