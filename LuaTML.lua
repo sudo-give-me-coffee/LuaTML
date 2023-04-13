@@ -55,7 +55,10 @@ setmetatable(_ENV,{
             local html = "<"..self.tag
             for property, value in pairs(self.properties or {}) do
               if type(property) ~= "number" then
-                html = html.." "..property.."=\""..value.."\""
+                if type(value) and getmetatable(value) == nil and property:sub(1,2) == "on" then
+                  value = table.concat(value,";"):gsub("\"","&quot;")
+                end
+                html = html.." "..property.."=\""..value:gsub("\"","&quot;").."\""
               end
             end
 
