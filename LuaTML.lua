@@ -79,7 +79,7 @@ setmetatable(_ENV,{
             self.properties = type(properties) == "table" and properties or {tostring(properties)}
             
             if self.tag:lower() == "html" then
-              return tostring(self)
+              return tostring("<!DOCTYPE html>\n"..self)
             end
 
             return self
