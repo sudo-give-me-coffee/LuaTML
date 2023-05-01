@@ -11,6 +11,11 @@ local function processa_parametro(e)
     local propriedade = tostring(e[2]):gsub("\"","\\\"")
     return "$_$(\""..elemento.."\",\""..propriedade.."\")"
   end
+  
+  if type(e) == "boolean" then
+    return tostring(e)
+  end
+  
   return '"'..tostring(e):gsub("\"","\\\"")..'"'
 end
 
