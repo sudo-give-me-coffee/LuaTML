@@ -5,21 +5,13 @@ head = html_component "head" {
     }
 }
   
-local function processa_parametro (e)
-  local valor = tostring(e)
-  local teste = valor:gsub("\\\\","\\\0"):gsub("\\%$","\\\0")
-
-  if teste:sub(1,2)=="${" and teste:sub(-1,-1) == "}" and teste:match(":") then
-    valor =  valor:sub(3,-2)
-    local id = valor:gsub(":.*$",""):gsub("\"","\\\"")
-    local campo =valor:gsub("^.*:",""):gsub("\"","\\\"")
-    valor = "$_$(\""..(id.."\",\""..campo).."\")"
-  else
-    if type(e) == "string" then
-      valor = ("\""..(valor:gsub("\"","\\\""):gsub("^%%%$","$"):gsub("^%%%%","%%")).."\"")
-    end
+local function processa_parametro(e)
+  if type(e) == "table" then
+    local elemento = tostring(e[1]):gsub("^#",""):gsub("\"","\\\"")
+    local propriedade = tostring(e[2]):gsub("\"","\\\"")
+    return "$_$(\""..elemento.."\",\""..propriedade.."\")"
   end
-  return valor
+  return '"'..tostring(e):gsub("\"","\\\"")..'"'
 end
 
 function alert(e)
