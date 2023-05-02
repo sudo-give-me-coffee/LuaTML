@@ -1,92 +1,88 @@
-setmetatable(_ENV,{
-  __index =
-    function (self,name)
-      local content = rawget(self,name)
-      if content ~= nil then
-        return content
+local _ENV_metatable = getmetatable(_ENV) or {}
+
+function _ENV_metatable.__index (self,name)
+  local content = rawget(self,name)
+  if content ~= nil then
+    return content
+  end
+
+  return setmetatable({tag=name}, {
+    __mul = function (self,number)
+      local block = {}
+      for i = 1, number do
+        block[#block+1] = self
+      end
+      return setmetatable(block, {
+        __tostring = function (self)
+          local result = ""
+          for i, element in ipairs(self) do
+            result = result..tostring(element)
+          end
+          return result
+        end
+      })
+    end,
+
+    __pow = function (self,items)
+      local block = {}
+      items = type(items) == "table" and items or {items}
+      for i, item in ipairs(items) do
+        local element = {tag = self.tag,properties = {}}
+        for property, value in pairs(self.properties or {}) do
+          element.properties[property] = value
+        end
+        element = setmetatable(element,getmetatable(self))
+        element.properties[1] = tostring(item)
+        block[#block+1] = element
+      end
+      return setmetatable(block, {
+        __tostring = function (self)
+          local result = ""
+          for i, element in ipairs(self) do
+            result = result..tostring(element)
+          end
+          return result
+        end
+      })
+    end,
+
+    __tostring = function (self)
+      local html = "<"..self.tag
+      for property, value in pairs(self.properties or {}) do
+        if type(property) ~= "number" then
+          if type(value) and getmetatable(value) == nil and property:sub(1,2) == "on" then
+            value = table.concat(value,";"):gsub("\"","&quot;")
+          end
+          html = html.." "..property.."=\""..value:gsub("\"","&quot;").."\""
+        end
       end
 
-      return setmetatable({tag=name},{
-        __mul =
-          function (self,number)
-            local block = {}
-            for i = 1, number do
-              block[#block+1] = self
-            end
-            return setmetatable(block,{
-              __tostring =
-                function (self)
-                  local result = ""
-                  for i, element in ipairs(self) do
-                    result = result..tostring(element)
-                  end
-                  return result
-                end
-            })
-          end,
+      if (#(self.properties or {}) == 0) and self.tag:lower() ~= "script" then
+        return html.."/>"
+      end
 
-        __pow =
-          function (self,items)
-            local block = {}
-            items = type(items) == "table" and items or {items}
-            for i, item in ipairs(items) do
-              local element = {tag = self.tag,properties = {}}
-              for property, value in pairs(self.properties or {}) do
-                element.properties[property] = value
-              end
-              element = setmetatable(element,getmetatable(self))
-              element.properties[1] = tostring(item)
-              block[#block+1] = element
-            end
-            return setmetatable(block,{
-              __tostring =
-                function (self)
-                  local result = ""
-                  for i, element in ipairs(self) do
-                    result = result..tostring(element)
-                  end
-                  return result
-                end
-            })
-          end,
+      html = html..">"
 
-        __tostring =
-          function (self)
-            local html = "<"..self.tag
-            for property, value in pairs(self.properties or {}) do
-              if type(property) ~= "number" then
-                if type(value) and getmetatable(value) == nil and property:sub(1,2) == "on" then
-                  value = table.concat(value,";"):gsub("\"","&quot;")
-                end
-                html = html.." "..property.."=\""..value:gsub("\"","&quot;").."\""
-              end
-            end
+      for i, children in ipairs(self.properties or {}) do
+        html = html..tostring(children)
+      end
 
-            if (#(self.properties or {}) == 0) and self.tag:lower() ~= "script" then
-              return html.."/>"
-            end
+      return html.."</"..self.tag..">"
+    end,
 
-            html = html..">"
+    __call = function (self,properties)
+      self.properties = type(properties) == "table" and properties or {tostring(properties)}
 
-            for i, children in ipairs(self.properties or {}) do
-              html = html..tostring(children)
-            end
+      if self.tag:lower() == "html" then
+        return tostring("<!DOCTYPE html>\n"..self)
+      end
 
-            return html.."</"..self.tag..">"
-          end,
-        __call =
-          function (self,properties)
-            self.properties = type(properties) == "table" and properties or {tostring(properties)}
-            
-            if self.tag:lower() == "html" then
-              return tostring("<!DOCTYPE html>\n"..self)
-            end
-
-            return self
-          end
-      })
+      return self
     end
-})
+  })
+end
+
+setmetatable(_ENV,_ENV_metatable)
 
 function html_component(tag)
   local _tag = tag
